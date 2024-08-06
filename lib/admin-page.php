@@ -346,7 +346,7 @@ if (strpos($cp_version, 'migration')) {
 			printf( esc_html__(
 				"You're almost done switching to ClassicPress v%s!",
 				'switch-to-classicpress'
-			), $show_cp_ver );
+			), esc_html($show_cp_ver) );
 			echo "</h2><strong class='cp-emphasis'>";
 			printf( wp_kses( __(
 				"You must visit the <a href='%s'>Updates Page</a> and Press the Re-Install Now button to complete the migration process!",
@@ -358,7 +358,7 @@ if (strpos($cp_version, 'migration')) {
 			printf( esc_html__(
 				"Good job, you're running ClassicPress v%s!",
 				'switch-to-classicpress'
-			), $show_cp_ver );
+			), esc_html($show_cp_ver) );
 			echo '</h2>';
 }
 ?>
@@ -396,7 +396,7 @@ if (strpos($cp_version, 'migration')) {
 				); ?>
 			</p>
 			<p>
-				<?php wp_kses( _e(
+				<?php wp_kses( __(
 					'In order to switch to ClassicPress, you\'ll need a <a href="https://move.wordpress.com/">Hosted WordPress</a> site first.',
 					'switch-to-classicpress'
 				), $allowed_tags ); ?>
