@@ -342,19 +342,20 @@ function classicpress_check_can_migrate() {
 <?php
 $show_cp_ver = preg_replace('#[+-].*$#', '', $cp_version);
 if (strpos($cp_version, 'migration')) {
-			wp_kses( _e(
-				"<h2>You're almost done switching to ClassicPress v$show_cp_ver!</h2>",
+//	printf( esc_html__( 'We deleted %d spam messages.', 'my-text-domain' ), $count );
+			printf( wp_kses( __(
+				"<h2>You're almost done switching to ClassicPress v%s!</h2>",
 				'switch-to-classicpress'
-			), $allowed_tags );
-			wp_kses( _e(
-				"<strong class='cp-emphasis'>You must visit the <a href='$reinstall_url'>Updates Page</a> and Press the Re-Install Now button to complete the migration process!</strong>",
+			), $allowed_tags ), $show_cp_ver);
+			printf( wp_kses( __(
+				"<strong class='cp-emphasis'>You must visit the <a href='%s'>Updates Page</a> and Press the Re-Install Now button to complete the migration process!</strong>",
 				'switch-to-classicpress'
-			), $allowed_tags );
+			), $allowed_tags ), $reinstall_url);
 } else {
-			wp_kses( _e(
-				"<h2>Good job, you're running ClassicPress v$show_cp_ver!</h2>",
+			printf( wp_kses( __(
+				"<h2>Good job, you're running ClassicPress v%s!</h2>",
 				'switch-to-classicpress'
-			), $allowed_tags );
+			), $allowed_tags ), $show_cp_ver);
 }
 ?>
 			<p><strong>
