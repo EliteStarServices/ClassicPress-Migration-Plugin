@@ -371,11 +371,11 @@ if (strpos($cp_version, 'migration')) {
 			<p>
 				<?php echo sprintf(
 					/* translators: %s: URL to plugins page */
-					__(
+					wp_kses( __(
 						'If no longer needed you can <a href="%s">delete the plugin</a>.',
 						'switch-to-classicpress'
-					),
-					$delete_plugin_url
+					), $allowed_tags ),
+					esc_url($delete_plugin_url)
 				); ?>
 			</p>
 		</div>
