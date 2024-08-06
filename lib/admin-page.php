@@ -138,59 +138,6 @@ add_action( 'admin_head-tools_page_switch-to-classicpress', 'classicpress_print_
 add_action( 'admin_head-index_page_switch-to-classicpress', 'classicpress_print_admin_styles' );
 
 /**
- * Remove the WP update nag from the Switch to ClassicPress page.
- *
- * @since 0.1.0
- */
-function classicpress_remove_update_nag() {
-	remove_action( 'admin_notices', 'update_nag', 3 );
-	remove_action( 'network_admin_notices', 'update_nag', 3 );
-}
-add_action( 'admin_head-tools_page_switch-to-classicpress', 'classicpress_remove_update_nag' );
-add_action( 'admin_head-index_page_switch-to-classicpress', 'classicpress_remove_update_nag' );
-
-/**
- * Register the plugin's admin page under the Dashboard menu for multisite
- * installations.
- *
- * @since 0.2.0
- */
-function classicpress_register_network_admin_menu() {
-	add_submenu_page(
-		'index.php',
-		__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
-		__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
-		'manage_network',
-		'switch-to-classicpress',
-		'classicpress_show_admin_page'
-	);
-}
-
-/**
- * Register the plugin's admin page under the Tools menu for single-site
- * installations.
- *
- * @since 0.1.0
- */
-function classicpress_register_admin_page() {
-	if ( current_user_can( 'update_core' ) ) {
-		add_management_page(
-			__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
-			__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
-			'read',
-			'switch-to-classicpress',
-			'classicpress_show_admin_page'
-		);
-	}
-}
-
-if ( is_multisite() ) {
-	add_action( 'network_admin_menu', 'classicpress_register_network_admin_menu' );
-} else {
-	add_action( 'admin_menu', 'classicpress_register_admin_page' );
-}
-
-/**
  * set wp_kses() allowed tags
  *
  * @since 1.5.2
@@ -256,6 +203,59 @@ $allowed_tags = array(
 );
 
 /**
+ * Remove the WP update nag from the Switch to ClassicPress page.
+ *
+ * @since 0.1.0
+ */
+function classicpress_remove_update_nag() {
+	remove_action( 'admin_notices', 'update_nag', 3 );
+	remove_action( 'network_admin_notices', 'update_nag', 3 );
+}
+add_action( 'admin_head-tools_page_switch-to-classicpress', 'classicpress_remove_update_nag' );
+add_action( 'admin_head-index_page_switch-to-classicpress', 'classicpress_remove_update_nag' );
+
+/**
+ * Register the plugin's admin page under the Dashboard menu for multisite
+ * installations.
+ *
+ * @since 0.2.0
+ */
+function classicpress_register_network_admin_menu() {
+	add_submenu_page(
+		'index.php',
+		__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
+		__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
+		'manage_network',
+		'switch-to-classicpress',
+		'classicpress_show_admin_page'
+	);
+}
+
+/**
+ * Register the plugin's admin page under the Tools menu for single-site
+ * installations.
+ *
+ * @since 0.1.0
+ */
+function classicpress_register_admin_page() {
+	if ( current_user_can( 'update_core' ) ) {
+		add_management_page(
+			__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
+			__( 'Switch to ClassicPress', 'switch-to-classicpress' ),
+			'read',
+			'switch-to-classicpress',
+			'classicpress_show_admin_page'
+		);
+	}
+}
+
+if ( is_multisite() ) {
+	add_action( 'network_admin_menu', 'classicpress_register_network_admin_menu' );
+} else {
+	add_action( 'admin_menu', 'classicpress_register_admin_page' );
+}
+
+/**
  * Show the plugin's admin page.
  *
  * @since 0.1.0
@@ -294,11 +294,11 @@ function classicpress_show_admin_page() {
 			'https://classicpress.zulipchat.com/register/'
 		); ?></li>
 		<li><?php printf(
-			__(
+			wp_kses( __(
 				/* translators: link to create a new GitHub issue for this plugin */
 				'For <strong>specific</strong> bug reports or suggestions, <a href="%s">add a new issue on GitHub</a>.',
 				'switch-to-classicpress'
-			),
+			), $allowed_tags ),
 			'https://github.com/ClassicPress/ClassicPress-Migration-Plugin/issues/new'
 		); ?></li>
 	</ul>
