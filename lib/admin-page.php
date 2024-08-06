@@ -323,10 +323,11 @@ function classicpress_show_admin_page() {
  * @return bool Whether to show the controls to proceed with the migration.
  */
 function classicpress_check_can_migrate() {
-	// First: Run a series of checks for conditions that are inherent to this
-	// WordPress install and this user session.
+	global $allowed_tags;
+// First: Run a series of checks for conditions that are inherent to this
+// WordPress install and this user session.
 
-	// Check: Are we already on ClassicPress?
+// Check: Are we already on ClassicPress?
 	if ( function_exists( 'classicpress_version' ) ) {
 		global $cp_version;
 		if ( is_multisite() ) {
@@ -339,20 +340,21 @@ function classicpress_check_can_migrate() {
 ?>
 		<div class="notice notice-success">
 <?php
+$show_cp_ver = preg_replace('#[+-].*$#', '', $cp_version);
 if (strpos($cp_version, 'migration')) {
-			_e(
-				"<h2>You're almost done switching to ClassicPress v".preg_replace('#[+-].*$#', '', $cp_version)."!</h2>",
+			wp_kses( _e(
+				"<h2>You're almost done switching to ClassicPress v$show_cp_ver!</h2>",
 				'switch-to-classicpress'
-			);
-			_e(
-				"<strong class='cp-emphasis'>You must visit the <a href='".$reinstall_url."'>Updates Page</a> and Press the Re-Install Now button to complete the migration process!</strong>",
+			), $allowed_tags );
+			wp_kses( _e(
+				"<strong class='cp-emphasis'>You must visit the <a href='$reinstall_url'>Updates Page</a> and Press the Re-Install Now button to complete the migration process!</strong>",
 				'switch-to-classicpress'
-			);
+			), $allowed_tags );
 } else {
-			_e(
-				"<h2>Good job, you're running ClassicPress v".preg_replace('#[+-].*$#', '', $cp_version)."!</h2>",
+			wp_kses( _e(
+				"<h2>Good job, you're running ClassicPress v$show_cp_ver!</h2>",
 				'switch-to-classicpress'
-			);
+			), $allowed_tags );
 }
 ?>
 			<p><strong>
@@ -389,10 +391,10 @@ if (strpos($cp_version, 'migration')) {
 				); ?>
 			</p>
 			<p>
-				<?php _e(
+				<?php wp_kses( _e(
 					'In order to switch to ClassicPress, you\'ll need a <a href="https://move.wordpress.com/">Hosted WordPress</a> site first.',
 					'switch-to-classicpress'
-				); ?>
+				), $allowed_tags ); ?>
 			</p>
 		</div>
 <?php
