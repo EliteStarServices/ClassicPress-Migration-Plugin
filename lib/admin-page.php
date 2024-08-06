@@ -191,11 +191,77 @@ if ( is_multisite() ) {
 }
 
 /**
+ * set wp_kses() allowed tags
+ *
+ * @since 1.5.2
+ */
+$allowed_tags = array(
+	'a' => array(
+		'class' => array(),
+		'href'  => array(),
+		'rel'   => array(),
+		'title' => array(),
+	),
+	'b' => array(),
+	'blockquote' => array(
+		'cite'  => array(),
+	),
+	'code' => array(),
+	'del' => array(
+		'datetime' => array(),
+		'title' => array(),
+	),
+	'dd' => array(),
+	'div' => array(
+		'class' => array(),
+		'title' => array(),
+		'style' => array(),
+	),
+	'dl' => array(),
+	'dt' => array(),
+	'em' => array(),
+	'h1' => array(),
+	'h2' => array(),
+	'h3' => array(),
+	'h4' => array(),
+	'h5' => array(),
+	'h6' => array(),
+	'i' => array(),
+	'img' => array(
+		'alt'    => array(),
+		'class'  => array(),
+		'height' => array(),
+		'src'    => array(),
+		'width'  => array(),
+	),
+	'li' => array(
+		'class' => array(),
+	),
+	'ol' => array(
+		'class' => array(),
+	),
+	'p' => array(
+		'class' => array(),
+	),
+	'span' => array(
+		'class' => array(),
+		'title' => array(),
+		'style' => array(),
+	),
+	'strike' => array(),
+	'strong' => array(),
+	'ul' => array(
+		'class' => array(),
+	),
+);
+
+/**
  * Show the plugin's admin page.
  *
  * @since 0.1.0
  */
 function classicpress_show_admin_page() {
+	global $allowed_tags;
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'Switch to ClassicPress', 'switch-to-classicpress' ); ?></h1>
@@ -219,11 +285,11 @@ function classicpress_show_admin_page() {
 	</p>
 	<ul class="cp-migration-info">
 		<li><?php printf(
-			__(
-				/* translators: 1: link with instructions to join our Forum, 2: link to join ClassicPress Slack */
+			wp_kses( __(
+				/* translators: 1: link to the ClassicPress Forum, 2: link to join the ClassicPress Zulip */
 				'For support, suggestions for improvement, or general discussion about how the plugin works, visit us in our <a href="%1$s">support forum</a> or <a href="%2$s">Zulip chat</a>.',
 				'switch-to-classicpress'
-			),
+			), $allowed_tags ),
 			'https://forums.classicpress.net/c/support/migration-plugin',
 			'https://classicpress.zulipchat.com/register/'
 		); ?></li>
