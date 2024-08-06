@@ -434,8 +434,8 @@ if (strpos($cp_version, 'migration')) {
 ?>
 		<div class="notice notice-error">
 			<p>
-				<?php echo $cp_api_object->get_error_message(); ?>
-				<?php echo json_encode( $cp_api_object->get_error_data() ); ?>
+				<?php echo esc_attr( $cp_api_object->get_error_message() ); ?>
+				<?php echo wp_json_encode( $cp_api_object->get_error_data() ); ?>
 			</p>
 		</div>
 <?php
