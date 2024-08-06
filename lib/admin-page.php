@@ -209,10 +209,10 @@ function classicpress_show_admin_page() {
 	}
 
 ?>
-	<h2><?php _e( 'Feedback and Support', 'switch-to-classicpress' ); ?></h2>
+	<h2><?php esc_html_e( 'Feedback and Support', 'switch-to-classicpress' ); ?></h2>
 
 	<p class="cp-migration-info">
-		<?php _e(
+		<?php esc_html_e(
 			"Do you have feedback about this plugin, or about ClassicPress itself? Need help with something? We'd love to know what you think!",
 			'switch-to-classicpress'
 		); ?>
@@ -289,12 +289,12 @@ if (strpos($cp_version, 'migration')) {
 			);
 }
 ?>
-			<p>
-				<?php _e(
-					"<strong>This Plugin is also an Advanced Version Control Tool for Development and Troubleshooting.</strong>",
+			<p><strong>
+				<?php esc_html_e(
+					"This Plugin is also an Advanced Version Control Tool for Development and Troubleshooting.",
 					'switch-to-classicpress'
 				); ?>
-			</p>
+			</strong></p>
 			<p>
 				<?php echo sprintf(
 					/* translators: %s: URL to plugins page */
@@ -324,7 +324,7 @@ if (strpos($cp_version, 'migration')) {
 			</p>
 			<p>
 				<?php _e(
-					'In order to switch to ClassicPress, you\'ll need to <a href="https://move.wordpress.com/">move to a self-hosted WordPress site</a> first.',
+					'In order to switch to ClassicPress, you\'ll need a <a href="https://move.wordpress.com/">Hosted WordPress</a> site first.',
 					'switch-to-classicpress'
 				); ?>
 			</p>
@@ -465,12 +465,12 @@ if (strpos($cp_version, 'migration')) {
 	), $wp_version );
 	if ( substr( $wp_version, 0, 1 ) === '5' && $preflight_checks['wp_version'] ) {
 		echo "<br>\n";
-		_e(
+		esc_html_e(
 			'Migration is supported, but content edited in the new WordPress block editor may not be fully compatible with ClassicPress.',
 			'switch-to-classicpress'
 		);
 		echo "<br>\n";
-		_e(
+		esc_html_e(
 			'After the migration, we recommend reviewing each recently edited post or page and restoring to an earlier revision if needed.',
 			'switch-to-classicpress'
 		);
@@ -622,12 +622,12 @@ if (strpos($cp_version, 'migration')) {
 			'We have detected one or more plugins that may require Blocks or fail to declare a compatible WordPress version.'.$plugin_info,
 			'switch-to-classicpress'
 		);
-		echo "<br>\n";
+		echo "<br>\n<li>";
 		 _e(
-			'<li>The safest way of switching to ClassicPress is to (temporarily) deactivate the following plugin(s):</li>',
+			'The safest way of switching to ClassicPress is to (temporarily) deactivate the following plugin(s):',
 			'switch-to-classicpress'
 		);
-		//echo "<br>\n";
+		echo "</li>";
 		/* translators: List of conflicting plugin names */
 		printf( __(
 			'<strong>%s<strong>',
