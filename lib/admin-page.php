@@ -539,7 +539,7 @@ if (strpos($cp_version, 'migration')) {
 	if ( substr( $wp_version, 0, 1 ) === '5' && $preflight_checks['wp_version'] ) {
 		echo "<br>\n";
 		esc_html_e(
-			'Migration is supported, but content edited in the new WordPress block editor may not be fully compatible with ClassicPress.',
+			'Migration is supported, but content edited in the WordPress block editor may not be fully compatible with ClassicPress.',
 			'switch-to-classicpress'
 		);
 		echo "<br>\n";

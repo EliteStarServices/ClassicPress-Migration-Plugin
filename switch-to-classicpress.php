@@ -78,8 +78,8 @@ function classicpress_ensure_network_activated() {
 
 		deactivate_plugins( array( plugin_basename( __FILE__ ) ) );
 
-		// HACK: Prevent the "Plugin activated" notice from showing.
-		unset( $_GET['activate'] );
+		// HACK: Prevent the "Plugin activated" notice from showing - CPCS Ignored / nonce not needed
+		unset( $_GET['activate'] ); // phpcs:ignore
 	}
 }
 add_action( 'admin_head', 'classicpress_ensure_network_activated' );
@@ -91,12 +91,12 @@ add_action( 'admin_head', 'classicpress_ensure_network_activated' );
  */
 function classicpress_deactivated_notice() {
 	echo '<div class="error"><p>';
-	_e(
+	wp_kses( __(
 		'The "Switch to ClassicPress" plugin must be <strong>network activated</strong> on multisite installations.',
 		'switch-to-classicpress'
-	);
+	), $allowed_tags );
 	echo '</p><p>';
-	_e(
+	esc_html_e(
 		'If you need help with this, please contact your site administrator.',
 		'switch-to-classicpress'
 	);
@@ -164,7 +164,7 @@ add_filter(
  * @since 1.0.1
  *
  * @return array {
- *     "wordpress": {
+ *     "wordpress": { // phpcs:ignore
  *         "min": "4.9.0",
  *         "max": "5.x.x",
  *         "other": [
@@ -335,5 +335,5 @@ function get_previous_version($version, $versions = []) {
 	if(!isset($versions[$pos - 1])) {
 		return false;
 	}
-	return $versions[$pos - 1];;
+	return $versions[$pos - 1];
 }
