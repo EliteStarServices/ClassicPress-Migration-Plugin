@@ -164,7 +164,7 @@ add_filter(
  * @since 1.0.1
  *
  * @return array {
- *     "wordpress": { // phpcs:ignore
+ *     "WordPress": {
  *         "min": "4.9.0",
  *         "max": "5.x.x",
  *         "other": [
@@ -172,7 +172,7 @@ add_filter(
  *             // patterns for development versions ...
  *          ]
  *      },
- *      "classicpress": {
+ *      "ClassicPress": {
  *          "build": "https://github.com/[...].zip",
  *          "version": "1.x.x"
  *      }
