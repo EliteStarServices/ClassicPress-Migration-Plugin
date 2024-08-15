@@ -71,6 +71,8 @@ function classicpress_override_strings( $translation, $text, $domain ) {
  * @return Overridden request, or false to proceed normally.
  */
 function classicpress_override_wp_update_api( $preempt, $r, $url ) {
+	// phpcs:disable
+	// WordPress spelling exception
 	if (
 		! preg_match(
 			'#^https?://api\.wordpress\.org/core/version-check/1\.\d/\?#',
@@ -84,7 +86,7 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
 		// Not a request we're interested in; do not override.
 		return $preempt;
 	}
-
+	// phpcs:enable
 	if ( ! classicpress_is_migration_request() ) {
 		// Not a request we're interested in; do not override.
 		return $preempt;
@@ -172,6 +174,8 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
  * @return Overridden request, or false to proceed normally.
  */
 function classicpress_override_wp_checksums_api( $preempt, $r, $url ) {
+	// phpcs:disable
+	// WordPress spelling exception
 	if ( ! preg_match(
 		'#^https?://api\.wordpress\.org/core/checksums/1\.\d/\?#',
 		$url
@@ -179,7 +183,7 @@ function classicpress_override_wp_checksums_api( $preempt, $r, $url ) {
 		// Not a request we're interested in; do not override.
 		return $preempt;
 	}
-
+	// phpcs:disable
 	return array(
 		'headers'       => array(),
 		'body'          => '',
