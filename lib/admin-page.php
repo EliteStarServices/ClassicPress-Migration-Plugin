@@ -445,7 +445,7 @@ if (strpos($cp_version, 'migration')) {
 	// The first round of checks has passed.  Now, run a second round related
 	// to conditions that the user (or at least the hosting provider) has
 	// control over, and display the results in a table.
-
+	
 	$preflight_checks = array();
 	$icon_preflight_pass = (
 		'<div class="cp-preflight-icon cp-pass">'
@@ -497,43 +497,43 @@ if (strpos($cp_version, 'migration')) {
 		 */
 		if ( apply_filters( 'classicpress_ignore_wp_version', false ) ) {
 			$preflight_checks['wp_version'] = true;
-			echo "<tr>\n<td>$icon_preflight_warn</td>\n<td>\n";
+			echo "<tr>\n<td> wp_kses( $icon_preflight_warn, $allowed_tags ) </td>\n<td>\n";
 			echo "<p>\n";
-			echo $wp_version_check_intro_message;
-			_e(
-				'The preflight check for supported WordPress versions has been <strong class="cp-emphasis">disabled</strong>.',
+			echo wp_kses( $wp_version_check_intro_message, $allowed_tags );
+			esc_html_e(
+				'The preflight check for supported WordPress versions has been disabled.',
 				'switch-to-classicpress'
 			);
 			echo "<br>\n";
-			_e(
+			esc_html_e(
 				'We cannot guarantee that the migration process is going to work, and it may even leave your current installation partially broken.',
 				'switch-to-classicpress'
 			);
-			echo "<br>\n";
-			_e(
-				'<strong class="cp-emphasis">Proceed at your own risk!</strong>',
+			echo "<br>\n<strong class='cp-emphasis'>";
+			esc_html_e(
+				'Proceed at your own risk!',
 				'switch-to-classicpress'
 			);
-			echo "<br>\n";
+			echo "</strong><br>\n";
 		} else {
 			$preflight_checks['wp_version'] = false;
 			echo "<tr>\n<td>$icon_preflight_fail</td>\n<td>\n";
 			echo "<p>\n";
-			echo $wp_version_check_intro_message;
+			echo wp_kses( $wp_version_check_intro_message, $allowed_tags );
 		}
 	} else {
 		$preflight_checks['wp_version'] = true;
 		if ( substr( $wp_version, 0, 1 ) === '5' ) {
-			echo "<tr>\n<td>$icon_preflight_warn</td>\n<td>\n";
+			echo "<tr>\n<td> wp_kses( $icon_preflight_warn, $allowed_tags ) </td>\n<td>\n";
 		} else {
-			echo "<tr>\n<td>$icon_preflight_pass</td>\n<td>\n";
+			echo "<tr>\n<td> wp_kses( $icon_preflight_pass, $allowed_tags ) </td>\n<td>\n";
 		}
-		echo "<p>\n";
-		echo $wp_version_check_intro_message;
+		echo "HERE<p>\n";
+		echo wp_kses( $wp_version_check_intro_message, $allowed_tags );
 	}
-	printf( __(
+	printf( esc_html__(
 		/* translators: current WordPress version */
-		'You are running WordPress version <strong>%s</strong>.',
+		'You are running WordPress version %s.',
 		'switch-to-classicpress'
 	), $wp_version );
 	if ( substr( $wp_version, 0, 1 ) === '5' && $preflight_checks['wp_version'] ) {
@@ -564,45 +564,45 @@ if (strpos($cp_version, 'migration')) {
 		( is_child_theme() && in_array( $theme->parent()->stylesheet, (array) $cp_api_parameters['themes'] ) )
 	) {
 		$preflight_checks['theme'] = false;
-		echo "<tr>\n<td>$icon_preflight_fail</td>\n<td>\n<p>\n";
-		printf( __(
+		echo "<tr>\n<td> wp_kses( $icon_preflight_fail, $allowed_tags ) </td>\n<td>\n<p>\n";
+		printf( esc_html__(
 			/* translators: active theme name */
-			'It looks like you are using the <strong>%1$s</strong> theme. Unfortunately, %1$s is known to be incompatible with ClassicPress.%2$s',
+			'It looks like you are using the %1$s theme. Unfortunately, %1$s is known to be incompatible with ClassicPress.%2$s',
 			'switch-to-classicpress'
 		), $theme->name, $fse_info );
 		echo "<br>\n";
-		_e(
+		esc_attr_e(
 			$theme_info,
 			'switch-to-classicpress'
 		);
 //	} elseif ( version_compare( $theme->get( 'RequiresWP' ), '5.0' ) >= 0 ) {
 	} elseif ( in_array( 'full-site-editing', $theme->tags ) ) {
 		$preflight_checks['theme'] = false;
-		echo "<tr>\n<td>$icon_preflight_fail</td>\n<td>\n<p>\n";
-		printf( __(
+		echo "<tr>\n<td> wp_kses( $icon_preflight_fail, $allowed_tags ) </td>\n<td>\n<p>\n";
+		printf( esc_html__(
 			/* translators: active theme name */
 			'It looks like you are using the <strong>%1$s</strong> theme. Unfortunately, %1$s is probably using FSE functions and may not be compatible with ClassicPress.%2$s',
 			'switch-to-classicpress'
 //		), $theme->name, $theme->get( 'RequiresWP' ) );
 		), $theme->name, $fse_info );
 		echo "<br>\n";
-		_e(
+		esc_attr_e(
 			$theme_info,
 			'switch-to-classicpress'
 		);
 	} elseif ( $theme->name == $theme_name ) {
 		$preflight_checks['theme'] = true;
-		echo "<tr>\n<td>$icon_preflight_pass</td>\n<td>\n<p>\n";
-		printf( __(
-			'It looks like you are using the <strong>%1$s</strong> theme.<br>%1$s is the suggested theme to use when migrating from ClassicPress to WordPress.',
+		echo "<tr>\n<td> wp_kses( $icon_preflight_pass, $allowed_tags ) </td>\n<td>\n<p>\n";
+		printf( esc_html__(
+			'It looks like you are using the %1$s theme - %1$s is the suggested theme to use when migrating from ClassicPress to WordPress.',
 			'switch-to-classicpress'
 		), $theme->name );
 	} else {
 		$preflight_checks['theme'] = true;
 		echo "<tr>\n<td>$icon_preflight_warn</td>\n<td>\n<p>\n";
-		printf( __(
+		printf( esc_html__(
 			/* translators: active theme name */
-			'It looks like you are using the <strong>%1$s</strong> theme. We are not aware of any incompatibilities between %1$s and ClassicPress.',
+			'It looks like you are using the %1$s theme. We are not aware of any incompatibilities between %1$s and ClassicPress.',
 			'switch-to-classicpress'
 		), $theme->name );
 		echo "<br>\n";
