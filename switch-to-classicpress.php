@@ -82,7 +82,7 @@ function classicpress_ensure_network_activated() {
 		deactivate_plugins( array( plugin_basename( __FILE__ ) ) );
 
 		// HACK: Prevent the "Plugin activated" notice from showing.
-		unset( $_GET['activate'] );
+		unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 }
 add_action( 'admin_head', 'classicpress_ensure_network_activated' );
@@ -167,7 +167,7 @@ add_filter(
  * @since 1.0.1
  *
  * @return array {
- * // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInComment
+ * // phpcs:ignore
  *     "wordpress": { 
  *         "min": "4.9.0",
  *         "max": "5.x.x",

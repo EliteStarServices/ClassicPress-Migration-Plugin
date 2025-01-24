@@ -73,7 +73,7 @@ function classicpress_override_strings( $translation, $text ) {
 function classicpress_override_wp_update_api( $preempt, $r, $url ) {
 	if (
 		! preg_match(
-			'#^https?://api\.wordpress\.org/core/version-check/1\.\d/\?#', // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+			'#^https?://api\.wordpress\.org/core/version-check/1\.\d/\?#', // phpcs:ignore
 			$url
 		) &&
 		! preg_match(
@@ -176,7 +176,7 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
  */
 function classicpress_override_wp_checksums_api( $preempt, $r, $url ) {
 	if ( ! preg_match(
-		'#^https?://api\.wordpress\.org/core/checksums/1\.\d/\?#', // phpcs:ignore WordPress.WP.CapitalPDangit.MisspelledInText
+		'#^https?://api\.wordpress\.org/core/checksums/1\.\d/\?#', // phpcs:ignore
 		$url
 	) ) {
 		// Not a request we're interested in; do not override.
