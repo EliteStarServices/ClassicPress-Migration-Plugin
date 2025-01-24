@@ -10,6 +10,7 @@ that can be used to install other versions, test nightly builds and even revert 
 site to WordPress.
 
 ## The CMS for Creators
+
 ClassicPress takes your website to the next level with the same features and
 functionality that you enjoyed with WordPress, but with more attention to the
 most common needs of a business website.
@@ -100,23 +101,21 @@ or
 
 ## Screenshots
 
-The plugin's admin page with information and the controls to start the migration: <br>
-<img width="600" src="assets/screenshot-1.png">
+The plugin's admin page with information and the controls to start the migration:  
+![](assets/screenshot-1.png)
 
 <br>
 
-The plugin's admin page with an error that is blocking the migration: <br>
-<img width="600" src="assets/screenshot-2.png">
+The plugin's admin page with an error that is blocking the migration:  
+![](assets/screenshot-2.png)
 
 <br>
 
-The plugin's migration progress page: <br>
-<img width="600" src="assets/screenshot-3.png">
-
-<br>
-
+The plugin's migration progress page:  
+![](assets/screenshot-3.png)
+  
 The About ClassicPress screen that appears at the end of the migration: <br>
-<img width="600" src="assets/screenshot-4.png">
+![](assets/screenshot-4.png)
 
 ## Changelog
 
@@ -186,7 +185,6 @@ supports migrating multisite WordPress installations to ClassicPress.
   migrating to ClassicPress
   ([details](https://github.com/ClassicPress/ClassicPress-Migration-Plugin/issues/67))
   
-  
 ### 1.3.0
 
 - Add Plugin and Theme check sections
@@ -195,7 +193,6 @@ supports migrating multisite WordPress installations to ClassicPress.
 ### 1.3.1
 
 - Remove stray files from release
-
   
 ### 1.4.0
 
@@ -203,11 +200,9 @@ supports migrating multisite WordPress installations to ClassicPress.
 - Add plugin header checking (#83)
 - Add theme header comparison check to compatibility logic (#76)
 
-
 ### 1.4.1
 
 - Version Bump
-
 
 ### 1.5.0
 
@@ -226,3 +221,7 @@ supports migrating multisite WordPress installations to ClassicPress.
 
 - Restrict Access to 'can update core'
 - Update GitHub Link
+
+### 1.5.2
+
+- Update Code to CPCS
