@@ -1,3 +1,4 @@
 /test/site/
 !/test/site/.gitkeep
 /switch-to-classicpress.zip
+.DS_Store
