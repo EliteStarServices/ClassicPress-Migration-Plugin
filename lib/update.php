@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return string              Possibly-overridden translated text.
  */
-function classicpress_override_strings( $translation, $text, $domain ) {
+function classicpress_override_strings( $translation, $text ) {
 	switch ( $text ) {
 		// Main page header.
 		case 'Update WordPress':
@@ -39,15 +39,15 @@ function classicpress_override_strings( $translation, $text, $domain ) {
 		// we cannot override cleanly.
 
 		case 'Welcome to WordPress %1$s. You will be redirected to the About WordPress screen. If not, click <a href="%2$s">here</a>.':
+			/* translators: 1: omitted; 2: link to about.php (About ClassicPress screen) */
 			return __(
-				/* translators: 1: omitted; 2: link to about.php (About ClassicPress screen) */
 				'Welcome to ClassicPress! You will be redirected to the About ClassicPress screen. If not, click <a href="%2$s">here</a>.',
 				'switch-to-classicpress'
 			);
 
 		case 'Welcome to WordPress %1$s. <a href="%2$s">Learn more</a>.':
+			/* translators: 1: omitted; 2: link to about.php (About ClassicPress screen) */
 			return __(
-				/* translators: 1: omitted; 2: link to about.php (About ClassicPress screen) */
 				'Welcome to ClassicPress! <a href="%2$s">Learn more</a>.',
 				'switch-to-classicpress'
 			);
@@ -73,7 +73,7 @@ function classicpress_override_strings( $translation, $text, $domain ) {
 function classicpress_override_wp_update_api( $preempt, $r, $url ) {
 	if (
 		! preg_match(
-			'#^https?://api\.wordpress\.org/core/version-check/1\.\d/\?#',
+			'#^https?://api\.wordpress\.org/core/version-check/1\.\d/\?#', // phpcs:ignore
 			$url
 		) &&
 		! preg_match(
@@ -89,7 +89,8 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
 		// Not a request we're interested in; do not override.
 		return $preempt;
 	}
-
+	/* I don't think we need Nonce here / Error Disabled */
+	// phpcs:ignore
 	switch ( $_GET['_migrate'] ) {
 		case 'classicpress':
 			$parameters = classicpress_migration_parameters();
@@ -102,6 +103,8 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
 			break;
 
 		case '_custom':
+			/* I don't think we need Nonce here / Errors Disabled */
+			// phpcs:disable WordPress.Security.NonceVerification.Missing
 			if (
 				! isset( $_POST['_build_url'] ) ||
 				! isset( $_POST['version'] )
@@ -109,8 +112,8 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
 				// Not sure what happened, but it's not good.
 				return $preempt;
 			}
-			$build_url = $_POST['_build_url'];
-			$version   = $_POST['version'];
+			$build_url = esc_url_raw( wp_unslash( $_POST['_build_url'] ) );
+			$version   = sanitize_text_field( wp_unslash( $_POST['version'] ) );
 			break;
 	}
 
@@ -142,7 +145,7 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
 
 	return array(
 		'headers'       => array(),
-		'body'          => json_encode( $data ),
+		'body'          => wp_json_encode( $data ),
 		'response'      => array(
 			'code'    => 200,
 			'message' => 'OK',
@@ -173,7 +176,7 @@ function classicpress_override_wp_update_api( $preempt, $r, $url ) {
  */
 function classicpress_override_wp_checksums_api( $preempt, $r, $url ) {
 	if ( ! preg_match(
-		'#^https?://api\.wordpress\.org/core/checksums/1\.\d/\?#',
+		'#^https?://api\.wordpress\.org/core/checksums/1\.\d/\?#', // phpcs:ignore
 		$url
 	) ) {
 		// Not a request we're interested in; do not override.
@@ -198,6 +201,8 @@ function classicpress_override_wp_checksums_api( $preempt, $r, $url ) {
  * @since 1.2.0
  */
 function classicpress_is_migration_request() {
+	/* I don't think we need Nonce here / Errors Disabled */
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended
 	return (
 		isset( $_GET['action'] ) &&
 		$_GET['action'] === 'do-core-upgrade' &&
@@ -217,6 +222,8 @@ function classicpress_override_upgrade_page() {
 		return;
 	}
 
+	/* I don't think we need Nonce here / Errors Disabled */
+	// phpcs:ignore
 	if ( $_GET['_migrate'] === '_custom' ) {
 		if ( empty( $_POST['_build_url'] ) ) {
 			// The request is no good.

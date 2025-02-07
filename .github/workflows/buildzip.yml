@@ -18,7 +18,7 @@ jobs:
           git archive -o switch-to-classicpress.zip --prefix switch-to-classicpress/ HEAD
           ls
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
             name: switch-to-classicpress
             path: switch-to-classicpress.zip

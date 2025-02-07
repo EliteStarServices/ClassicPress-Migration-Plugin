@@ -3,14 +3,17 @@
  * Plugin Name:       Switch to ClassicPress
  * Plugin URI:        https://github.com/ClassicPress/ClassicPress-Migration-Plugin
  * Description:       Switch your WordPress installation to ClassicPress.
- * Version:           1.5.1
+ * Version:           1.5.2
  * Author:            ClassicPress
  * Author URI:        https://www.classicpress.net
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages
  * Text Domain:       switch-to-classicpress
+ * Requires CP: 1.7
+ * Requires PHP: 7.4
  * Requires at least: 4.9
+ * Tested up to: 6.7
  * Network: true
  * @package ClassicPress
  */
@@ -38,7 +41,7 @@ function classicpress_load_plugin_textdomain() {
 	load_plugin_textdomain(
 		'switch-to-classicpress',
 		false,
-		basename( dirname( __FILE__ ) ) . '/languages'
+		basename( __DIR__ ) . '/languages'
 	);
 }
 
@@ -47,21 +50,21 @@ function classicpress_load_plugin_textdomain() {
  *
  * @since 0.1.0
  */
-require_once dirname( __FILE__ ) . '/lib/admin-page.php';
+require_once __DIR__ . '/lib/admin-page.php';
 
 /**
  * Load helper functions.
  *
  * @since 0.2.0
  */
-require_once dirname( __FILE__ ) . '/lib/check-core-files.php';
+require_once __DIR__ . '/lib/check-core-files.php';
 
 /**
  * Load the update hijacking mechanism.
  *
  * @since 0.1.0
  */
-require_once dirname( __FILE__ ) . '/lib/update.php';
+require_once __DIR__ . '/lib/update.php';
 
 /**
  * On multisite, the plugin must be network activated.
@@ -79,7 +82,7 @@ function classicpress_ensure_network_activated() {
 		deactivate_plugins( array( plugin_basename( __FILE__ ) ) );
 
 		// HACK: Prevent the "Plugin activated" notice from showing.
-		unset( $_GET['activate'] );
+		unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 }
 add_action( 'admin_head', 'classicpress_ensure_network_activated' );
@@ -91,12 +94,12 @@ add_action( 'admin_head', 'classicpress_ensure_network_activated' );
  */
 function classicpress_deactivated_notice() {
 	echo '<div class="error"><p>';
-	_e(
+	wp_kses_post(
 		'The "Switch to ClassicPress" plugin must be <strong>network activated</strong> on multisite installations.',
 		'switch-to-classicpress'
 	);
 	echo '</p><p>';
-	_e(
+	esc_html_e(
 		'If you need help with this, please contact your site administrator.',
 		'switch-to-classicpress'
 	);
@@ -139,7 +142,7 @@ function classicpress_plugin_action_links( $links ) {
 	$links = array_merge( array(
 		'<a class="cp-migration-action" href="' . esc_url( $upgrade_page_url ) . '">'
 		. __( 'Switch', 'switch-to-classicpress' )
-		. '</a>'
+		. '</a>',
 	), $links );
 
 	return $links;
@@ -164,7 +167,8 @@ add_filter(
  * @since 1.0.1
  *
  * @return array {
- *     "wordpress": {
+ * // phpcs:ignore
+ *     "wordpress": { 
  *         "min": "4.9.0",
  *         "max": "5.x.x",
  *         "other": [
@@ -227,7 +231,7 @@ function get_cp_versions() {
 	$cp_versions = get_transient( 'classicpress_release_versions' );
 
 if ( ! $cp_versions ) {
-	$response = wp_remote_get('https://api-v1.classicpress.net/v1/upgrade/index.php', ['timeout'=>3]);
+	$response = wp_remote_get('https://api-v1.classicpress.net/v1/upgrade/index.php', array( 'timeout'=>3 ));
 	if ( is_wp_error( $response ) ) {
 		$status = $response->get_error_message();
 	} else {
@@ -256,7 +260,7 @@ if ( ! $cp_versions ) {
 		);
 	}
 }
-//	$versions = json_decode(wp_remote_retrieve_body($response));
+//  $versions = json_decode(wp_remote_retrieve_body($response));
 
 	// Get only stable releases
 	foreach ($cp_versions as $key => $version) {
@@ -268,7 +272,7 @@ if ( ! $cp_versions ) {
 
 	// Strip .json from version
 	$cp_versions = array_map(
-		function($v) {
+		function ($v) {
 			return substr($v, 0, -5);
 		},
 		$cp_versions
@@ -278,11 +282,10 @@ if ( ! $cp_versions ) {
 	usort($cp_versions, 'version_compare');
 
 	return array_values($cp_versions);
-
 }
 
 function get_migration_from_cp_version($version) {
-	$response = wp_remote_get('https://api.github.com/repos/ClassicPress/ClassicPress-release/releases/tags/'.$version, ['timeout'=>3]);
+	$response = wp_remote_get('https://api.github.com/repos/ClassicPress/ClassicPress-release/releases/tags/'.$version, array( 'timeout'=>3 ));
 	if (is_wp_error($response) || empty($response)) {
 		return false;
 	}
@@ -321,9 +324,9 @@ function getReleaseFromCPVersion($version) {
  *
  * @return string|bool      Previous version. False if not found.
  */
-function get_previous_version($version, $versions = []) {
+function get_previous_version($version, $versions = array()) {
 	if (empty($versions)) {
-//		$versions = self::getCPVersions();
+//      $versions = self::getCPVersions();
 		$versions = get_cp_versions();
 	} else {
 		usort($versions, 'version_compare');
@@ -335,5 +338,5 @@ function get_previous_version($version, $versions = []) {
 	if(!isset($versions[$pos - 1])) {
 		return false;
 	}
-	return $versions[$pos - 1];;
+	return $versions[$pos - 1];
 }

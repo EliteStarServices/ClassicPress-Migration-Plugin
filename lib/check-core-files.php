@@ -31,8 +31,10 @@ function classicpress_check_core_files( $locale = 'en_US' ) {
 	foreach ( $checksums as $file => $checksum ) {
 		// Skip sample config, plugins, themes, etc.
 		if (
+			// phpcs:disable Universal.Operators.StrictComparisons.LooseEqual
 			'wp-content' == substr( $file, 0, 10 ) ||
 			'wp-config-sample.php' == substr( $file, 0, 20 )
+			// phpcs:enable
 		) {
 			continue;
 		}

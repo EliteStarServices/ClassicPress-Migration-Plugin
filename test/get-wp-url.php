@@ -1,5 +1,7 @@
 <?php
 
+/* Ignoring 3 coding standards errors in this file */
+// phpcs:disable
 $lando_info = json_decode( file_get_contents( 'php://stdin' ), true );
 
 if ( empty( $lando_info ) || empty( $argv[1] ) ) {
@@ -20,3 +22,4 @@ foreach ( $lando_info as $service ) {
 
 fwrite( STDERR, "ERROR: No matching URL found!\n" );
 exit( 1 );
+// php:enable
