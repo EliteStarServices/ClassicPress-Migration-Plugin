@@ -10,11 +10,11 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages
  * Text Domain:       switch-to-classicpress
- * Requires CP: 1.7
- * Requires PHP: 7.4
+ * Requires CP:       1.7
+ * Requires PHP:      7.4
  * Requires at least: 4.9
- * Tested up to: 6.7
- * Network: true
+ * Tested up to:      6.7
+ * Network:           true
  * @package ClassicPress
  */
 
@@ -168,7 +168,7 @@ add_filter(
  *
  * @return array {
  * // phpcs:ignore
- *     "wordpress": { 
+ *     "wordpress": {
  *         "min": "4.9.0",
  *         "max": "5.x.x",
  *         "other": [
