@@ -224,7 +224,7 @@ function classicpress_show_admin_page() {
 				'For support, suggestions for improvement, or general discussion about how the plugin works, visit us in our <a href="%1$s">support forum</a> or <a href="%2$s">Zulip chat</a>.',
 				'switch-to-classicpress'
 			),
-			'https://forums.classicpress.net/c/support/migration-plugin',
+			'https://forums.classicpress.net/tags/c/plugins/9/migration-plugin',
 			'https://classicpress.zulipchat.com/register/'
 		); ?></li>
 		<li><?php printf(
@@ -565,8 +565,9 @@ if (strpos($cp_version, 'migration')) {
 			continue;
 		}
 //		echo $plugin;
-		if ( $plugin === 'ClassicPress-Migration-Plugin/switch-to-classicpress.php' ) {
-   			continue; // Skip this plugin
+		$migchk = explode ( '/', $plugin );
+		if ( $migchk[1] === 'switch-to-classicpress.php' ) {
+			continue; // Skip this plugin
 		}
   // Get the plugin data
 		$plugin_data = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, $plugin_headers );
@@ -647,18 +648,18 @@ if (strpos($cp_version, 'migration')) {
 		);
 		//echo "<br>\n";
 		// translators: List of conflicting plugin names - DISPLAY DISABLED BELOW
-/*	
+//	
 		printf( wp_kses_post(
 			'<strong>%s<strong>',
 			'switch-to-classicpress'
 		), esc_html( implode( ', ', $undeclared_compatibility_plugins ) ) );
-*/
+//
 		echo "</p></td></tr>\n";
 		} else {
 		$preflight_checks['plugins'] = true;
 		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_pass) . "</td>\n<td>\n<p>\n";
 		esc_html_e(
-			'It looks like you have no plugins or have deactived plugins other than Switch to ClassicPress, this is the safest to migrate your site to ClassicPress.',
+			'It looks like you have no plugins or have deactived plugins other than Switch to ClassicPress, this is the safest way to migrate your site to ClassicPress.',
 			'switch-to-classicpress'
 		);
 		}
@@ -929,7 +930,7 @@ function classicpress_show_migration_blocked_info() {
 				'If you\'re not sure how to fix the issues above, you can ask for help in our <a href="%s">Support Forum</a>.',
 				'switch-to-classicpress'
 			),
-			'https://forums.classicpress.net/c/support/migration-plugin'
+			'https://forums.classicpress.net/tags/c/plugins/9/migration-plugin'
 		);
 		?>
 	</p>
@@ -1055,13 +1056,13 @@ function classicpress_show_advanced_migration_controls( $ok = true ) {
 				<td>
 					<p>
 						<?php echo wp_kses_post(
-							'If all requirements for your custom version have been met, then migration should complete.</p><p>That does not mean it will be successful in every case and<strong class="cp-emphasis"> Older Versions May Not be Secure!</strong></p>',
+							'If all requirements for your custom version have been met, then migration should complete.</p><p>That does not mean it will work in every case and<strong class="cp-emphasis"> Older Versions may have Password or Security Issues!</strong></p>',
 							'switch-to-classicpress'
 						); ?>
 					</p>
 					<p>
 						<?php echo wp_kses_post(
-							'Please, make a <strong class="cp-emphasis">Complete Backup of your Site</strong> before using this tool<strong class="cp-emphasis"> At Your Own Risk!</strong>',
+							'Please, make a <strong class="cp-emphasis">Complete Backup of your Site and Database</strong> before using this tool<strong class="cp-emphasis"> At Your Own Risk!</strong>',
 							'switch-to-classicpress'
 						); ?>
 					</p>
