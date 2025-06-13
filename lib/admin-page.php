@@ -648,12 +648,12 @@ if (strpos($cp_version, 'migration')) {
 		);
 		//echo "<br>\n";
 		// translators: List of conflicting plugin names - DISPLAY DISABLED BELOW
-//	
+/*	
 		printf( wp_kses_post(
 			'<strong>%s<strong>',
 			'switch-to-classicpress'
 		), esc_html( implode( ', ', $undeclared_compatibility_plugins ) ) );
-//
+*/
 		echo "</p></td></tr>\n";
 		} else {
 		$preflight_checks['plugins'] = true;
