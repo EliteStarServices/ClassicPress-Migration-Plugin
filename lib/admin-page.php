@@ -494,7 +494,7 @@ if (strpos($cp_version, 'migration')) {
 	$default_theme = "<a href='$theme_url'>$theme_name</a>";
 	$theme_info = "<strong>The safest way of switching to ClassicPress is to install and activate the fully compatible theme <em>$default_theme</em>.</strong>
 	<br>You can <strong class='cp-emphasis'>Continue at Your Own Risk</strong> with your current theme, but you may experience issues if the theme is not compatible with ClassicPress.";	
-/* THEME CHECKS DISABLED - WARN INSTEAD
+/* THEME CHECKS DISABLED / WARN ONLY - (I kept this code for referance but a rework could be done to remove it and more code that is no longer needed)
 	$fse_info = "<br>Block and Full Screen Editor themes may work in ClassicPress, but you will have to test the theme(s) you plan to use and verify that they work correctly.";
 	if (
 		in_array( $theme->stylesheet, (array) $cp_api_parameters['themes'] ) ||
@@ -560,6 +560,7 @@ if (strpos($cp_version, 'migration')) {
 	$plugin_info = "It looks like you have active plugins, you should test the plugins you plan to use after migration and verify they work correctly.";
 
 	// Start by checking if plugins have declared they require WordPress 5.0 or higher
+	// CHANGED TO CHECK FOR WP 1.0 OR HIGHER / ALL PLUGINS
 	foreach ( $plugins as $plugin ) {
 		if ( in_array( $plugin, $cp_api_parameters['plugins'] ) ) {
 			continue;
@@ -567,9 +568,9 @@ if (strpos($cp_version, 'migration')) {
 //		echo $plugin;
 		$migchk = explode ( '/', $plugin );
 		if ( $migchk[1] === 'switch-to-classicpress.php' ) {
-			continue; // Skip this plugin
+			continue; // skip the Switch to ClassicPress plugin
 		}
-  // Get the plugin data
+  		// Get the plugin data
 		$plugin_data = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, $plugin_headers );
 		$plugin_name = $plugin_data['Name'];
 		if ( version_compare( $plugin_data['RequiresWP'], '1.0' ) >= 0 ) {
@@ -646,9 +647,9 @@ if (strpos($cp_version, 'migration')) {
 			<br>You can <strong class='cp-emphasis'>Continue at Your Own Risk</strong> with active plugins, but you may experience issues if any plugins are not compatible with ClassicPress.",
 			'switch-to-classicpress'
 		);
-		//echo "<br>\n";
-		// translators: List of conflicting plugin names - DISPLAY DISABLED BELOW
+		// translators: List of conflicting plugin names - UNCOMMENT TO DISPLAY
 /*	
+		echo "<br>\n";
 		printf( wp_kses_post(
 			'<strong>%s<strong>',
 			'switch-to-classicpress'
@@ -785,7 +786,7 @@ if (strpos($cp_version, 'migration')) {
 			// translators: modified core file name
 			echo esc_html( sprintf( ' - %s', $file ) ) . "<br>\n";
 		}
-/*
+/*		OLD METHOD SENT TO CONSOLE - CAN BE REMOVED
 		echo wp_kses_post(
 			'If you have JavaScript enabled, you can see a list of modified files <strong>in your browser console</strong>.',
 			'switch-to-classicpress'
@@ -1062,7 +1063,7 @@ function classicpress_show_advanced_migration_controls( $ok = true ) {
 					</p>
 					<p>
 						<?php echo wp_kses_post(
-							'Please, make a <strong class="cp-emphasis">Complete Backup of your Site and Database</strong> before using this tool<strong class="cp-emphasis"> At Your Own Risk!</strong>',
+							'Please, make a <strong class="cp-emphasis">Complete Backup of your Site Files and Database</strong> before using this tool<strong class="cp-emphasis"> At Your Own Risk!</strong>',
 							'switch-to-classicpress'
 						); ?>
 					</p>
