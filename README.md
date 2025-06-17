@@ -230,4 +230,5 @@ supports migrating multisite WordPress installations to ClassicPress.
 
 - Change Plugin and Theme Checks to explain safest method, but only warn if not followed
 - Change Core File check to show any modified files on the page rather than in the console
+- Display override function info for unsupported WP versions when applicable
 - Correct links and update wording as needed

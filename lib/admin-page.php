@@ -404,9 +404,9 @@ if (strpos($cp_version, 'migration')) {
 	$wp_version_max = $cp_api_parameters['wordpress']['max'];
 	/* translators: 1: minimum supported WordPress version, 2: maximum supported WordPress version */
 	$wp_version_check_intro_message = sprintf( __(
-		'This plugin supports WordPress versions <strong>%1$s</strong> to <strong>%2$s</strong> (and some newer development versions).',
+		'This plugin supports WordPress versions <strong>%1$s</strong> to <strong>%2$s</strong> (and some newer development versions).<br>You are running WordPress version <strong>%3$s</strong>.',
 		'switch-to-classicpress'
-	), $wp_version_min, $wp_version_max );
+	), $wp_version_min, $wp_version_max, $wp_version );
 	$wp_version_check_intro_message .= "<br>\n";
 
 	if (
@@ -434,17 +434,17 @@ if (strpos($cp_version, 'migration')) {
 			echo "<p>\n";
 			echo wp_kses_post( $wp_version_check_intro_message );
 			echo wp_kses_post(
-				'The preflight check for supported WordPress versions has been <strong class="cp-emphasis">disabled</strong>.',
+				'The check for supported WordPress versions has been <strong class="cp-emphasis">Manually Disabled</strong>.',
 				'switch-to-classicpress'
 			);
 			echo "<br>\n";
 			esc_html_e(
-				'We cannot guarantee that the migration process is going to work, and it may even leave your current installation partially broken.',
+				'We cannot guarantee that the migration process is going to work, and it may leave your current installation broken.',
 				'switch-to-classicpress'
 			);
 			echo "<br>\n";
 			echo wp_kses_post(
-				'<strong class="cp-emphasis">Proceed at your own risk!</strong>',
+				'<strong class="cp-emphasis">Proceed At Your Own Risk!</strong>',
 				'switch-to-classicpress'
 			);
 			echo "<br>\n";
@@ -453,6 +453,9 @@ if (strpos($cp_version, 'migration')) {
 			echo wp_kses_post( "<tr>\n<td>$icon_preflight_fail</td>\n<td>\n" );
 			echo "<p>\n";
 			echo wp_kses_post( $wp_version_check_intro_message );
+			echo wp_kses_post( "You can enable migration from this version of WordPress <strong class='cp-emphasis'>At Your
+		Own Risk</strong><br>Use the following code in your current theme's
+		`functions.php` file or a mu-plugin to allow migration:<br><code>add_filter( 'classicpress_ignore_wp_version', '__return_true' );</code>" );
 		}
 	} else {
 		$preflight_checks['wp_version'] = true;
@@ -464,15 +467,16 @@ if (strpos($cp_version, 'migration')) {
 		echo "<p>\n";
 		echo wp_kses_post( $wp_version_check_intro_message );
 	}
-	/* translators: current WordPress version */
+	/* translators: current WordPress version
 	printf( wp_kses_post(
 		'You are running WordPress version <strong>%s</strong>.',
 		'switch-to-classicpress'
 	), esc_html( $wp_version ) );
+	*/
 	if ( substr( $wp_version, 0, 1 ) >= '5' && $preflight_checks['wp_version'] ) {
-		echo "<br>\n";
+		//echo "<br>\n";
 		esc_html_e(
-			'Migration is supported, but content edited with the WordPress Block Editor may not be fully compatible with ClassicPress.',
+			'Content edited with the WordPress Block Editor may not be fully compatible with ClassicPress.',
 			'switch-to-classicpress'
 		);
 /* THIS NEXT LINE IS DISABLED - I THINK THE ABOVE IS ENOUGH
