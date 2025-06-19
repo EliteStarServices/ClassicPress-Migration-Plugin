@@ -498,7 +498,7 @@ if (strpos($cp_version, 'migration')) {
 	$default_theme = "<a href='$theme_url'>$theme_name</a>";
 	$theme_info = "<strong>The safest way of switching to ClassicPress is to install and activate the fully compatible theme <em>$default_theme</em>.</strong>
 	<br>You can <strong class='cp-emphasis'>Continue at Your Own Risk</strong> with your current theme, but you may experience issues if the theme is not compatible with ClassicPress.";	
-/* THEME CHECKS DISABLED / WARN ONLY - (I kept this code for referance but a rework could be done to remove it and more code that is no longer needed)
+/* THEME CHECKS DISABLED / WARN ONLY (Since v1.7) - (I kept this code for referance but a rework could be done to remove it and more code that is no longer needed)
 	$fse_info = "<br>Block and Full Screen Editor themes may work in ClassicPress, but you will have to test the theme(s) you plan to use and verify that they work correctly.";
 	if (
 		in_array( $theme->stylesheet, (array) $cp_api_parameters['themes'] ) ||
@@ -565,13 +565,14 @@ if (strpos($cp_version, 'migration')) {
 
 	// Start by checking if plugins have declared they require WordPress 5.0 or higher
 	// CHANGED TO CHECK FOR WP 1.0 OR HIGHER / ALL PLUGINS
+	// DISABLED (Since v1.7)
+	/*
 	foreach ( $plugins as $plugin ) {
 		if ( in_array( $plugin, $cp_api_parameters['plugins'] ) ) {
 			continue;
 		}
-//		echo $plugin;
 		$migchk = explode ( '/', $plugin );
-		if ( $migchk[1] === 'switch-to-classicpress.php' ) {
+		if ( ( isset($migchk[1]) ? $migchk[1] : '' ) === 'switch-to-classicpress.php' ) {
 			continue; // skip the Switch to ClassicPress plugin
 		}
   		// Get the plugin data
@@ -603,9 +604,10 @@ if (strpos($cp_version, 'migration')) {
 			$undeclared_compatibility_plugins[ $plugin ] = $plugin_name;
 		}
 	}
+	*/
 
 	// Compare active plugins with API response of known conflicting plugins
-	$cp_api_parameters['plugins'] === ""; // DISABLES THIS CHECK
+	$cp_api_parameters['plugins'] = []; // DISABLES THIS CHECK (Since v1.7)
 	if (
 		$plugins !== array_diff( $plugins, $cp_api_parameters['plugins'] ) ||
 		! empty( $declared_incompatible_plugins )
@@ -638,7 +640,9 @@ if (strpos($cp_version, 'migration')) {
 			'<strong>%s<strong>',
 			'switch-to-classicpress'
 		), esc_html( implode( ', ', $conflicting_plugin_names ) ) );
-		} elseif ( ! empty( $undeclared_compatibility_plugins ) ) {
+		// } elseif ( ! empty( $undeclared_compatibility_plugins ) ) {
+		// CHANGED TO AVOID LOOPING TROUGH PLUGINS ABOVE (Since v.1.7)
+		} elseif ( count($plugins) > 1 ) {
 		$preflight_checks['plugins'] = true;
 		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_warn) . "</td>\n<td>\n<p>\n";
 		echo wp_kses_post(
@@ -651,7 +655,8 @@ if (strpos($cp_version, 'migration')) {
 			<br>You can <strong class='cp-emphasis'>Continue at Your Own Risk</strong> with active plugins, but you may experience issues if any plugins are not compatible with ClassicPress.",
 			'switch-to-classicpress'
 		);
-		// translators: List of conflicting plugin names - UNCOMMENT TO DISPLAY
+		// translators: List of conflicting plugin names
+		// UNCOMMENT TO DISPLAY (Since v1.7)
 /*	
 		echo "<br>\n";
 		printf( wp_kses_post(
