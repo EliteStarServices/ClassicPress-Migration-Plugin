@@ -211,8 +211,8 @@ supports migrating multisite WordPress installations to ClassicPress.
 - Adjust checks, notifications and information text as needed for CP v2
 - Warn that Migration requires Re-Install (reminder if you go back into the plugin)
 - Chat link changed from Slack to Zulip
-- Offer CP v1 & v2 current and one version back (unless no previous as with 2 right now)
-- Offer WP current, 6.3.x and 4.9.x (4.9 offered only if running PHP 7)
+- Offer CP v1 & v2 current and one version back (unless no previous)
+- Offer WP current, 6.2.x and 4.9.x (4.9 offered only if running PHP 7)
 - Offer release version if running CP migration version
 - Will not offer re-installation
 - Suggest a ClassicPress Default theme
@@ -225,3 +225,10 @@ supports migrating multisite WordPress installations to ClassicPress.
 ### 1.5.2
 
 - Update Code to CPCS
+
+### 1.5.3
+
+- Change Plugin and Theme Checks to explain safest method, but only warn if not followed
+- Change Core File check to show any modified files on the page rather than in the console
+- Display override function info for unsupported WP versions when applicable
+- Correct links and update wording as needed

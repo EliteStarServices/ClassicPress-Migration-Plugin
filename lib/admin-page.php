@@ -224,7 +224,7 @@ function classicpress_show_admin_page() {
 				'For support, suggestions for improvement, or general discussion about how the plugin works, visit us in our <a href="%1$s">support forum</a> or <a href="%2$s">Zulip chat</a>.',
 				'switch-to-classicpress'
 			),
-			'https://forums.classicpress.net/c/support/migration-plugin',
+			'https://forums.classicpress.net/tags/c/plugins/9/migration-plugin',
 			'https://classicpress.zulipchat.com/register/'
 		); ?></li>
 		<li><?php printf(
@@ -404,9 +404,9 @@ if (strpos($cp_version, 'migration')) {
 	$wp_version_max = $cp_api_parameters['wordpress']['max'];
 	/* translators: 1: minimum supported WordPress version, 2: maximum supported WordPress version */
 	$wp_version_check_intro_message = sprintf( __(
-		'This plugin supports WordPress versions <strong>%1$s</strong> to <strong>%2$s</strong> (and some newer development versions).',
+		'This plugin supports WordPress versions <strong>%1$s</strong> to <strong>%2$s</strong> (and some newer development versions).<br>You are running WordPress version <strong>%3$s</strong>.',
 		'switch-to-classicpress'
-	), $wp_version_min, $wp_version_max );
+	), $wp_version_min, $wp_version_max, $wp_version );
 	$wp_version_check_intro_message .= "<br>\n";
 
 	if (
@@ -434,17 +434,17 @@ if (strpos($cp_version, 'migration')) {
 			echo "<p>\n";
 			echo wp_kses_post( $wp_version_check_intro_message );
 			echo wp_kses_post(
-				'The preflight check for supported WordPress versions has been <strong class="cp-emphasis">disabled</strong>.',
+				'The check for supported WordPress versions has been <strong class="cp-emphasis">Manually Disabled</strong>.',
 				'switch-to-classicpress'
 			);
 			echo "<br>\n";
 			esc_html_e(
-				'We cannot guarantee that the migration process is going to work, and it may even leave your current installation partially broken.',
+				'We cannot guarantee that the migration process is going to work, and it may leave your current installation broken.',
 				'switch-to-classicpress'
 			);
 			echo "<br>\n";
 			echo wp_kses_post(
-				'<strong class="cp-emphasis">Proceed at your own risk!</strong>',
+				'<strong class="cp-emphasis">Proceed At Your Own Risk!</strong>',
 				'switch-to-classicpress'
 			);
 			echo "<br>\n";
@@ -453,6 +453,9 @@ if (strpos($cp_version, 'migration')) {
 			echo wp_kses_post( "<tr>\n<td>$icon_preflight_fail</td>\n<td>\n" );
 			echo "<p>\n";
 			echo wp_kses_post( $wp_version_check_intro_message );
+			echo wp_kses_post( "You can enable migration from this version of WordPress <strong class='cp-emphasis'>At Your
+		Own Risk</strong><br>Use the following code in your current theme's
+		`functions.php` file or a mu-plugin to allow migration:<br><code>add_filter( 'classicpress_ignore_wp_version', '__return_true' );</code>" );
 		}
 	} else {
 		$preflight_checks['wp_version'] = true;
@@ -464,68 +467,28 @@ if (strpos($cp_version, 'migration')) {
 		echo "<p>\n";
 		echo wp_kses_post( $wp_version_check_intro_message );
 	}
-	/* translators: current WordPress version */
-	printf( wp_kses_post(
-		'You are running WordPress version <strong>%s</strong>.',
-		'switch-to-classicpress'
-	), esc_html( $wp_version ) );
+
 	if ( substr( $wp_version, 0, 1 ) >= '5' && $preflight_checks['wp_version'] ) {
-		echo "<br>\n";
+		//echo "<br>\n";
 		esc_html_e(
-			'Migration is supported, but content edited with the WordPress Block Editor may not be fully compatible with ClassicPress.',
+			'Content edited with the WordPress Block Editor may not be fully compatible with ClassicPress.',
 			'switch-to-classicpress'
 		);
-/* THIS NEXT LINE IS DISABLED - I THINK THE ABOVE IS ENOUGH
-		echo "<br>\n";
-		esc_html_e(
-			'After the migration, we recommend reviewing each recently edited post or page and restoring to an earlier revision if needed.',
-			'switch-to-classicpress'
-		);
-*/
+
 	}
 	echo "\n</p>\n";
 	// TODO: Add instructions if WP too old.
 	echo "</td></tr>\n";
 
-	// Check: Conflicting Theme
+	// Theme Check
 	$theme = wp_get_theme();
 	$theme_name = $cp_api_parameters['defaults']['theme_name'];
 	$theme_url = $cp_api_parameters['defaults']['theme_url'];
 	$default_theme = "<a href='$theme_url'>$theme_name</a>";
-	$theme_info = "<li>The safest way of switching to ClassicPress is by (temporarily) installing and activating the fully compatible theme <strong>$default_theme</strong>.</li>";
-	$fse_info = "<br>Block and Full Screen Editor themes may work in ClassicPress, but you will have to test the theme(s) you plan to use and verify that they work correctly.";
-	if (
-		in_array( $theme->stylesheet, (array) $cp_api_parameters['themes'] ) ||
-		( is_child_theme() && in_array( $theme->parent()->stylesheet, (array) $cp_api_parameters['themes'] ) )
-	) {
-		$preflight_checks['theme'] = false;
-		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_fail) . "</td>\n<td>\n<p>\n";
-		/* translators: active theme name */
-		printf( wp_kses_post(
-			'It looks like you are using the <strong>%1$s</strong> theme. Unfortunately, %1$s is known to be incompatible with ClassicPress.%2$s',
-			'switch-to-classicpress'
-		), esc_html( $theme->name ), wp_kses_post( $fse_info ) );
-		echo "<br>\n";
-		echo wp_kses_post(
-			$theme_info,
-			'switch-to-classicpress'
-		);
-//  } elseif ( version_compare( $theme->get( 'RequiresWP' ), '5.0' ) >= 0 ) {
-	} elseif ( in_array( 'full-site-editing', $theme->tags ) ) {
-		$preflight_checks['theme'] = false;
-		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_fail) . "</td>\n<td>\n<p>\n";
-		printf( wp_kses_post(
-			/* translators: active theme name */
-			'It looks like you are using the <strong>%1$s</strong> theme. Unfortunately, %1$s is probably using FSE functions and may not be compatible with ClassicPress.%2$s',
-			'switch-to-classicpress'
-//      ), $theme->name, $theme->get( 'RequiresWP' ) );
-		), esc_html( $theme->name ), wp_kses_post( $fse_info ) );
-		echo "<br>\n";
-		echo wp_kses_post(
-			$theme_info,
-			'switch-to-classicpress'
-		);
-	} elseif ( $theme->name === $theme_name ) {
+	$theme_info = "<strong>The safest way of switching to ClassicPress is to install and activate the fully compatible theme <em>$default_theme</em>.</strong>
+	<br>You can <strong class='cp-emphasis'>Continue at Your Own Risk</strong> with your current theme, but you may experience issues if the theme is not compatible with ClassicPress.";	
+// THEME CHECKS DISABLED / WARN ONLY (Since v1.6)
+	if ( $theme->name === $theme_name ) {
 		$preflight_checks['theme'] = true;
 		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_pass) . "</td>\n<td>\n<p>\n";
 		printf( wp_kses_post(
@@ -536,8 +499,8 @@ if (strpos($cp_version, 'migration')) {
 		$preflight_checks['theme'] = true;
 		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_warn) . "</td>\n<td>\n<p>\n";
 		printf( wp_kses_post(
-			/* translators: active theme name */
-			'It looks like you are using the <strong>%1$s</strong> theme. We are not aware of any incompatibilities between %1$s and ClassicPress.',
+			// translators: active theme name
+			'It looks like you are using the theme <strong>%1$s</strong>, you should test the theme(s) you plan to use after migration and verify that they work correctly.',
 			'switch-to-classicpress'
 		), esc_html( $theme->name ) );
 		echo "<br>\n";
@@ -548,104 +511,32 @@ if (strpos($cp_version, 'migration')) {
 	}
 	echo "</p></td></tr>\n";
 
-	// Check: Conflicting Plugins
+	// Plugins Check
 	$plugins = get_option( 'active_plugins' );
 	$plugin_headers = array( 'Name' => 'Plugin Name', 'RequiresWP'  => 'Requires at least' );
 	$declared_incompatible_plugins = array();
 	$undeclared_compatibility_plugins = array();
-	$plugin_info = "<br>Plugins that require Blocks might not work in ClassicPress, you should test the plugins you plan to use and verify they work correctly.";
+	$plugin_info = "It looks like you have active plugins, you should test the plugins you plan to use after migration and verify they work correctly.";
 
-	// Start by checking if plugins have declared they require WordPress 5.0 or higher
-	foreach ( $plugins as $plugin ) {
-		if ( in_array( $plugin, $cp_api_parameters['plugins'] ) ) {
-			continue;
-		}
-		$plugin_data = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, $plugin_headers );
-		$plugin_name = $plugin_data['Name'];
-		if ( version_compare( $plugin_data['RequiresWP'], '5.0' ) >= 0 ) {
-			$undeclared_compatibility_plugins[ $plugin ] = $plugin_name;
-		} else {
-			$plugin_files = get_plugin_files( $plugin );
-			$readmes = array_filter( $plugin_files, function ( $files ) {
-				return ( stripos( $files, 'readme') !== false );
-			} );
-			foreach( $readmes as $readme ) {
-				if ( empty( $readme ) ) {
-					continue;
-				}
-				$readme_data = get_file_data( WP_PLUGIN_DIR . '/' . $readme, $plugin_headers );
-				if ( version_compare( $readme_data['RequiresWP'], '5.0' ) >= 0 ) {
-					$undeclared_compatibility_plugins[ $plugin ] = $plugin_name;
-					continue;
-				}
-			}
-		}
-		if (
-			empty( $plugin_data['RequiresWP'] ) &&
-			( empty( $readmes ) || empty( $readme_data['RequiresWP'] ) ) &&
-			false === array_key_exists( $plugin, $declared_incompatible_plugins )
-		) {
-			$undeclared_compatibility_plugins[ $plugin ] = $plugin_name;
-		}
-	}
-
-	// Compare active plugins with API response of known conflicting plugins
-	if (
-		$plugins !== array_diff( $plugins, $cp_api_parameters['plugins'] ) ||
-		! empty( $declared_incompatible_plugins )
-	) {
-		$preflight_checks['plugins'] = false;
-		$conflicting_plugins = array_intersect( $cp_api_parameters['plugins'], $plugins );
-		$conflicting_plugin_names = array();
-		foreach( $conflicting_plugins as $conflicting_plugin ) {
-			$conflicting_plugin_data = get_plugin_data( WP_CONTENT_DIR . '/plugins/' . $conflicting_plugin );
-			$conflicting_plugin_names[] = $conflicting_plugin_data['Name'];
-		}
-		if ( ! empty( $declared_incompatible_plugins ) ) {
-			foreach( $declared_incompatible_plugins as $slug => $name ) {
-				$conflicting_plugin_names[] = $name;
-			}
-		}
-		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_fail) . "</td>\n<td>\n<p>\n";
-		esc_html_e(
-			'We have detected one or more known incompatible plugins that prevent migrating your site to ClassicPress.',
-			'switch-to-classicpress'
-		);
-		echo "<br>\n";
-		esc_html_e(
-			'Please deactivate the following plugins if you wish to continue migrating your site to ClassicPress:',
-			'switch-to-classicpress'
-		);
-		echo "<br>\n";
-		/* translators: List of conflicting plugin names */
-		printf( wp_kses_post(
-			'<strong>%s<strong>',
-			'switch-to-classicpress'
-		), esc_html( implode( ', ', $conflicting_plugin_names ) ) );
-		} elseif ( ! empty( $undeclared_compatibility_plugins ) ) {
+		if ( count($plugins) > 1 ) {
 		$preflight_checks['plugins'] = true;
 		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_warn) . "</td>\n<td>\n<p>\n";
 		echo wp_kses_post(
-			'We have detected one or more plugins that may require Blocks or fail to declare a compatible WordPress version.'.$plugin_info,
+			$plugin_info,
 			'switch-to-classicpress'
 		);
 		echo "<br>\n";
 		echo wp_kses_post(
-			'<li>The safest way of switching to ClassicPress is to (temporarily) deactivate the following plugin(s):</li>',
+			"<strong>The safest way of switching to ClassicPress is to (temporarily) deactivate your plugins, except <em>Switch to ClassicPress</em>.</strong>
+			<br>You can <strong class='cp-emphasis'>Continue at Your Own Risk</strong> with active plugins, but you may experience issues if any plugins are not compatible with ClassicPress.",
 			'switch-to-classicpress'
 		);
-		//echo "<br>\n";
-		/* translators: List of conflicting plugin names */
-		printf( wp_kses_post(
-			'<strong>%s<strong>',
-			'switch-to-classicpress'
-		), esc_html( implode( ', ', $undeclared_compatibility_plugins ) ) );
 		echo "</p></td></tr>\n";
 		} else {
 		$preflight_checks['plugins'] = true;
-		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_warn) . "</td>\n<td>\n<p>\n";
+		echo "<tr>\n<td>" . wp_kses_post($icon_preflight_pass) . "</td>\n<td>\n<p>\n";
 		esc_html_e(
-			'We are not aware that any of your active plugins are incompatible with ClassicPress.',
+			'It looks like you have no plugins or have deactived plugins other than Switch to ClassicPress, this is the safest way to migrate your site to ClassicPress.',
 			'switch-to-classicpress'
 		);
 		}
@@ -741,7 +632,7 @@ if (strpos($cp_version, 'migration')) {
 	}
 	echo "<p>\n";
 	esc_html_e(
-		'Your WordPress core files will be overwritten.',
+		'WordPress core files will be overwritten during the migration.',
 		'switch-to-classicpress'
 	);
 	echo "\n<br>\n";
@@ -763,17 +654,15 @@ if (strpos($cp_version, 'migration')) {
 	} else {
 		echo '<strong class="cp-emphasis">';
 		esc_html_e(
-			'Modified core files detected. These customizations will be lost.',
+			'Modified core files detected. These customizations will be lost:',
 			'switch-to-classicpress'
 		);
 		echo "</strong>\n<br>\n";
-		echo wp_kses_post(
-			'If you have JavaScript enabled, you can see a list of modified files <strong>in your browser console</strong>.',
-			'switch-to-classicpress'
-		);
-		echo "\n<script>console.log( 'modified core files:', ";
-		echo wp_json_encode( $modified_files );
-		echo ' );</script>';
+		foreach ( $modified_files as $file ) {
+			// translators: modified core file name
+			echo esc_html( sprintf( ' - %s', $file ) ) . "<br>\n";
+		}
+
 	}
 	echo "\n</p>\n";
 	echo "</td></tr>\n";
@@ -823,7 +712,7 @@ if (strpos($cp_version, 'migration')) {
  * Show the controls and information needed to migrate to ClassicPress.
  *
  * NOTE: ONLY CALL THIS FUNCTION IF ALL PRE-FLIGHT CHECKS HAVE PASSED!
- * Otherwise you *will* end up with a broken site!
+ * Otherwise you could end up with a broken site!
  *
  * @since 0.1.0
  */
@@ -910,7 +799,7 @@ function classicpress_show_migration_blocked_info() {
 				'If you\'re not sure how to fix the issues above, you can ask for help in our <a href="%s">Support Forum</a>.',
 				'switch-to-classicpress'
 			),
-			'https://forums.classicpress.net/c/support/migration-plugin'
+			'https://forums.classicpress.net/tags/c/plugins/9/migration-plugin'
 		);
 		?>
 	</p>
@@ -1036,13 +925,13 @@ function classicpress_show_advanced_migration_controls( $ok = true ) {
 				<td>
 					<p>
 						<?php echo wp_kses_post(
-							'If all requirements for your custom version have been met, then migration should complete.</p><p>That does not mean it will be successful in every case and<strong class="cp-emphasis"> Older Versions May Not be Secure!</strong></p>',
+							'If all requirements for your custom version have been met, then migration should complete.</p><p>That does not mean it will work in every case and<strong class="cp-emphasis"> Older Versions may have Password or Security Issues!</strong></p>',
 							'switch-to-classicpress'
 						); ?>
 					</p>
 					<p>
 						<?php echo wp_kses_post(
-							'Please, make a <strong class="cp-emphasis">Complete Backup of your Site</strong> before using this tool<strong class="cp-emphasis"> At Your Own Risk!</strong>',
+							'Please, make a <strong class="cp-emphasis">Complete Backup of your Site Files and Database</strong> before using this tool<strong class="cp-emphasis"> At Your Own Risk!</strong>',
 							'switch-to-classicpress'
 						); ?>
 					</p>
